@@ -13,7 +13,6 @@ Spring Cloud Kubernetes를 통해 spring-boot application을 k8s 위에 배포�
     Avaliable list of services
 
 #### 2. kubernetes-circuitbreaker-ribbon-example	
-#### 3. kubernetes-hello-world-example	
-#### 4. kubernetes-leader-election-example
-#### 5. kubernetes-reload-example	
-#### 6. kubernetes-zipkin-example	
+#### 3. kubernetes-leader-election-example
+#### 4. kubernetes-reload-example	
+#### 5. kubernetes-zipkin-example	
