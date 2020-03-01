@@ -5,7 +5,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.2.5.RELEASE</version>
+        <version>2.0.4.RELEASE</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.sphong</groupId>
@@ -136,7 +136,7 @@
                     <execution>
                         <id>fmp</id>
                         <goals>
-                            <goal>resource</goal>
+                            <goal>build</goal>
                         </goals>
                     </execution>
                 </executions>
@@ -188,9 +188,9 @@
                                         ​<failureThreshold>3</failureThreshold>
                                         ​<successThreshold>1</successThreshold>
                                         ​</f8-healthcheck-spring-boot>
-                                    <spring-boot-health-check>
-                                        <path>/actuator/health</path>
-                                    </spring-boot-health-check>
+<!--                                    <spring-boot-health-check>-->
+<!--                                        <path>/actuator/health</path>-->
+<!--                                    </spring-boot-health-check>-->
                                     <fmp-service>
                                         <type>NodePort</type>
                                     </fmp-service>
