@@ -1,0 +1,11 @@
+spring:
+  application:
+    name: name-service-1
+  cloud:
+    kubernetes:
+      config:
+        name: default
+        namespace: default-namespace
+
+server:
+  port: 8080

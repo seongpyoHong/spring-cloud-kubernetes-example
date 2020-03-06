@@ -1,0 +1,4 @@
+rootProject.name = 'kubernetes-ribbon-circuitbreaker-example'
+include 'greeting-service'
+include 'name-service-1'
+include 'name-service-2'

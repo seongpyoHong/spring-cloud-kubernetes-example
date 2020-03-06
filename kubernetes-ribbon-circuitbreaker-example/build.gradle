@@ -1,0 +1,95 @@
+//plugins
+plugins {
+    id 'org.springframework.boot' version '2.0.4.RELEASE'
+    id 'io.spring.dependency-management' version '1.0.9.RELEASE'
+    id 'java'
+    id 'com.google.cloud.tools.jib' version '2.1.0' apply false
+}
+
+subprojects {
+    //project information
+    group = 'com.sphong'
+    version = '0.0.1-SNAPSHOT'
+    //java version
+    sourceCompatibility = '1.8'
+
+    apply plugin : 'java'
+    apply plugin : 'org.springframework.boot'
+    apply plugin : 'io.spring.dependency-management'
+    apply plugin : 'com.google.cloud.tools.jib'
+
+    configurations {
+        compileOnly {
+            extendsFrom annotationProcessor
+        }
+    }
+
+    repositories {
+        mavenCentral()
+        maven{url "https://repo.spring.io/snapshot/"}
+    }
+
+    ext {
+        set('springCloudVersion', "Finchley.SR1")
+        set('gcr',"asia.gcr.io")
+        set('projectName',"sphong-kuber")
+        set('springCloudK8sVersion',"1.0.0.BUILD-SNAPSHOT")
+    }
+
+    dependencies {
+        implementation 'org.springframework.boot:spring-boot-starter-actuator'
+        implementation 'org.springframework.boot:spring-boot-starter-webflux'
+        implementation 'org.springframework.boot:spring-boot-starter-web'
+        implementation 'org.springframework.cloud:spring-cloud-starter-netflix-ribbon'
+        implementation 'org.springframework.cloud:spring-cloud-starter-netflix-hystrix'
+        implementation 'org.springframework.cloud:spring-cloud-kubernetes-discovery'
+        implementation 'org.springframework.cloud:spring-cloud-starter-kubernetes-config'
+        implementation 'org.springframework.cloud:spring-cloud-starter-kubernetes-ribbon'
+        testImplementation('org.springframework.boot:spring-boot-starter-test') {
+            exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
+        }
+    }
+    dependencyManagement {
+        imports {
+            mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+            mavenBom "org.springframework.cloud:spring-cloud-kubernetes-dependencies:${springCloudK8sVersion}"
+        }
+    }
+
+    test {
+        useJUnitPlatform()
+    }
+
+    //build docker image
+    jib {
+        to {
+            image = "${gcr}/${projectName}/" + "${bootJar.baseName}:${bootJar.version}"
+            tags = ['latest']
+        }
+    }
+
+}
+
+project(':greeting-service') {
+    //Customizing bootJar
+    bootJar {
+        baseName = "${project.name}"
+        version =  '0.1.0'
+    }
+
+}
+
+project(':name-service-1') {
+    //Customizing bootJar
+    bootJar {
+        baseName = "${project.name}"
+        version =  '0.1.0'
+    }
+}
+
+project(':name-service-2') {
+    bootJar {
+        baseName = "${project.name}"
+        version =  '0.1.0'
+    }
+}

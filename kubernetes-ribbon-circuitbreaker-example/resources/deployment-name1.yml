@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: name-service-1
+  name: name-service-1
+spec:
+  replicas: 1
+  revisionHistoryLimit: 2
+  selector:
+    matchLabels:
+      app: name-service-1
+  template:
+    metadata:
+      labels:
+        app: name-service-1
+    spec:
+      imagePullSecrets:
+        - name: gcr-json-key
+      containers:
+        - name : name-service-1
+          image: asia.gcr.io/sphong-kuber/name-service-1:latest
+          imagePullPolicy: Always
+          livenessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /actuator/health
+              port: 8080
+              scheme: HTTP
+            initialDelaySeconds: 180
+            successThreshold: 1
+            timeoutSeconds: 30
+          ports:
+            - containerPort: 8080
+              name: http
+              protocol: TCP
+          readinessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /actuator/health
+              port: 8080
+              scheme: HTTP
+            initialDelaySeconds: 30
+            successThreshold: 1
+            timeoutSeconds: 30
+          securityContext:
+            privileged: false
