@@ -1,0 +1,60 @@
+plugins {
+    id 'org.springframework.boot' version '2.2.5.RELEASE'
+    id 'io.spring.dependency-management' version '1.0.9.RELEASE'
+    id 'java'
+    id 'com.google.cloud.tools.jib' version '2.1.0'
+}
+
+group = 'com.sphong'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '1.8'
+
+configurations {
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+}
+
+repositories {
+    mavenCentral()
+    maven{url "https://repo.spring.io/snapshot/"}
+}
+
+ext {
+    set('springCloudVersion', "Finchley.SR1")
+    set('gcr',"asia.gcr.io")
+    set('projectName',"sphong-kuber")
+    set('springCloudK8sVersion',"1.0.0.BUILD-SNAPSHOT")
+}
+
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter'
+    implementation 'org.springframework.cloud:spring-cloud-starter-kubernetes-config'
+
+    compileOnly 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok'
+    testImplementation('org.springframework.boot:spring-boot-starter-test') {
+        exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
+    }
+}
+
+dependencyManagement {
+    imports {
+        mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+        mavenBom "org.springframework.cloud:spring-cloud-kubernetes-dependencies:${springCloudK8sVersion}"
+    }
+}
+
+test {
+    useJUnitPlatform()
+}
+
+//build docker image
+jib {
+    to {
+        image = "${gcr}/${projectName}/" + "${bootJar.baseName}:${bootJar.version}"
+        tags = ['latest']
+    }
+}
