@@ -1,0 +1,51 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: reload-example
+  name: reload-example
+spec:
+  replicas: 1
+  revisionHistoryLimit: 2
+  selector:
+    matchLabels:
+      app: reload-example
+  template:
+    metadata:
+      labels:
+        app: reload-example
+    spec:
+      serviceAccountName: config-reader
+      imagePullSecrets:
+        - name: gcr-json-key
+      containers:
+        - name : reload-example
+          image: asia.gcr.io/sphong-kuber/kubernetes-reload-example:latest
+          imagePullPolicy: Always
+          livenessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /actuator/health
+              port: 8080
+              scheme: HTTP
+            initialDelaySeconds: 180
+            successThreshold: 1
+            timeoutSeconds: 180
+          ports:
+            - containerPort: 8080
+              name: http
+              protocol: TCP
+          readinessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /actuator/health
+              port: 8080
+              scheme: HTTP
+            initialDelaySeconds: 180
+            successThreshold: 1
+            timeoutSeconds: 180
+          securityContext:
+            privileged: false
+          envFrom:
+            - configMapRef:
+                name : reload-example

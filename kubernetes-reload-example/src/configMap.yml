@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: reload-example
+data:
+  application.yml: |-
+    bean:
+      message: Changed Version!
