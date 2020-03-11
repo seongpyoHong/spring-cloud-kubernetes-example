@@ -67,6 +67,62 @@ name-service-2-df9b9bf59-wkvvw    1/1     Running   0          20m
     Hello from fallback!
 ```
 
-#### 3. kubernetes-leader-election-example
-#### 4. kubernetes-reload-example	
+#### 3. kubernetes-reload-example
+- ConfigMap / Secret 변경에 따른 auto-reload 제공
+
+### Execution
+
+- Build docker image & Push to GCR
+```
+./gradlew jib
+```
+- Create k8s resources
+```
+kubectl apply -f resources/
+```
+- Change ConfigMap
+```
+kubectl apply -f src/configMap.yml
+```
+
+### Result
+
+**Before Changing the ConfigMap**
+
+- **ConfigMap**
+
+        apiVersion: v1
+        kind: ConfigMap
+        metadata:
+          name: reload-example
+        data:
+          application.properties: |-
+            bean.message=Hello World!
+            another.property=value
+
+- Output
+
+        2020-03-11 13:51:21.844  INFO 1 --- [main] c.s.e.KubernetesReloadExampleApplication : Started KubernetesReloadExampleApplication in 8.698 seconds (JVM running for 9.357)
+        The first message is: Hello World!
+        The other message is: Dummy Message
+
+**After Changing the ConfigMap**
+
+- ConfigMap
+
+        apiVersion: v1
+        kind: ConfigMap
+        metadata:
+          name: reload-example
+        data:
+          application.properties: |-
+            bean.message=Changed Version!
+            another.property=value
+
+- Output
+
+        2020-03-11 13:55:52.554  INFO 1 --- [scheduling-1] o.s.boot.SpringApplication               : Started application in 0.436 seconds (JVM running for 280.067)
+        The first message is: Changed Version!
+        The other message is: Dummy Message
+#### 4. kubernetes-leader-election-example
 #### 5. kubernetes-zipkin-example	
