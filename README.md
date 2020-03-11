@@ -67,10 +67,10 @@ name-service-2-df9b9bf59-wkvvw    1/1     Running   0          20m
     Hello from fallback!
 ```
 
-#### 3. kubernetes-reload-example
+### 3. kubernetes-reload-example
 - ConfigMap / Secret 변경에 따른 auto-reload 제공
 
-### Execution
+#### Execution
 
 - Build docker image & Push to GCR
 ```
@@ -85,7 +85,7 @@ kubectl apply -f resources/
 kubectl apply -f src/configMap.yml
 ```
 
-### Result
+#### Result
 
 **Before Changing the ConfigMap**
 
