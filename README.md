@@ -125,4 +125,6 @@ kubectl apply -f src/configMap.yml
         The first message is: Changed Version!
         The other message is: Dummy Message
 #### 4. kubernetes-leader-election-example
+Not yet stater
 #### 5. kubernetes-zipkin-example	
+Not yet stater
